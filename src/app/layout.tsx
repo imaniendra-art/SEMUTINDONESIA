@@ -27,6 +27,9 @@ export default function RootLayout({
       lang="id"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
+      <head>
+        <link rel="stylesheet" href="/quill.snow.css" />
+      </head>
       <body className="min-h-full flex flex-col">
         {children}
       </body>

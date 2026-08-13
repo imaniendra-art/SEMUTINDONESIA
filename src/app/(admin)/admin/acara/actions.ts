@@ -30,7 +30,7 @@ export async function createAcara(formData: FormData) {
     
     // Generate unique filename
     const filename = `${Date.now()}-${imageFile.name.replace(/[^a-zA-Z0-9.-]/g, "")}`;
-    const uploadDir = path.join(process.cwd(), "public", "uploads");
+    const uploadDir = path.join(process.cwd(), "data", "uploads");
     const filePath = path.join(uploadDir, filename);
     
     writeFileSync(filePath, buffer);
@@ -84,7 +84,7 @@ export async function updateAcara(id: string, formData: FormData) {
     const buffer = Buffer.from(bytes);
     
     const filename = `${Date.now()}-${imageFile.name.replace(/[^a-zA-Z0-9.-]/g, "")}`;
-    const uploadDir = path.join(process.cwd(), "public", "uploads");
+    const uploadDir = path.join(process.cwd(), "data", "uploads");
     const filePath = path.join(uploadDir, filename);
     
     writeFileSync(filePath, buffer);

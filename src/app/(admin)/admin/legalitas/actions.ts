@@ -35,7 +35,7 @@ export async function createDocument(prevState: any, formData: FormData) {
     const filename = `doc-${uniqueSuffix}.${ext}`;
     
     // Ensure uploads directory exists
-    const uploadDir = path.join(process.cwd(), "public/uploads/docs");
+    const uploadDir = path.join(process.cwd(), "data/uploads/docs");
     if (!fs.existsSync(uploadDir)) {
       fs.mkdirSync(uploadDir, { recursive: true });
     }
@@ -87,7 +87,7 @@ export async function updateDocument(id: string, prevState: any, formData: FormD
       const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
       const filename = `doc-${uniqueSuffix}.${ext}`;
       
-      const uploadDir = path.join(process.cwd(), "public/uploads/docs");
+      const uploadDir = path.join(process.cwd(), "data/uploads/docs");
       if (!fs.existsSync(uploadDir)) {
         fs.mkdirSync(uploadDir, { recursive: true });
       }

@@ -4,7 +4,6 @@ import { useActionState, useState, useRef, useMemo } from "react";
 import { createBerita } from "../actions";
 import Link from "next/link";
 import dynamic from "next/dynamic";
-import "react-quill-new/dist/quill.snow.css";
 
 const ReactQuill = dynamic(() => import("react-quill-new"), { ssr: false }) as any;
 

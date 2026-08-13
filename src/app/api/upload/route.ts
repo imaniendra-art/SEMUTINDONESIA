@@ -23,7 +23,7 @@ export async function POST(req: NextRequest) {
 
     // Generate unique filename
     const filename = `${Date.now()}-${file.name.replace(/[^a-zA-Z0-9.-]/g, "")}`;
-    const uploadDir = path.join(process.cwd(), "public", "uploads");
+    const uploadDir = path.join(process.cwd(), "data", "uploads");
     
     // Ensure directory exists
     if (!existsSync(uploadDir)) {
