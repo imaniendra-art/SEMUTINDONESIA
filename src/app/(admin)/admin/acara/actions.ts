@@ -61,3 +61,46 @@ export async function deleteAcara(id: string) {
   revalidatePath("/admin/acara");
   revalidatePath("/acara");
 }
+
+export async function updateAcara(id: string, formData: FormData) {
+  const session = await getSession();
+  if (!session) throw new Error("Unauthorized");
+
+  const title = formData.get("title") as string;
+  const description = formData.get("description") as string;
+  const dateStr = formData.get("date") as string;
+  const location = formData.get("location") as string;
+  const imageFile = formData.get("image") as File | null;
+  
+  if (!title || !description || !dateStr || !location) {
+    return { error: "Semua kolom harus diisi" };
+  }
+
+  let imageUrl: string | undefined = undefined;
+  if (imageFile && imageFile.size > 0) {
+    const bytes = await imageFile.arrayBuffer();
+    const buffer = Buffer.from(bytes);
+    
+    const filename = `${Date.now()}-${imageFile.name.replace(/[^a-zA-Z0-9.-]/g, "")}`;
+    const uploadDir = path.join(process.cwd(), "public", "uploads");
+    const filePath = path.join(uploadDir, filename);
+    
+    writeFileSync(filePath, buffer);
+    imageUrl = `/uploads/${filename}`;
+  }
+
+  await prisma.event.update({
+    where: { id },
+    data: {
+      title,
+      description,
+      ...(imageUrl && { image: imageUrl }),
+      date: new Date(dateStr),
+      location,
+    }
+  });
+
+  revalidatePath("/admin/acara");
+  revalidatePath("/acara");
+  redirect("/admin/acara");
+}

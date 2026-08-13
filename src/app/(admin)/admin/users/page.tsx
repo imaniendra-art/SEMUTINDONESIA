@@ -62,6 +62,7 @@ export default async function AdminUsersPage() {
                     <td className="px-6 py-4">
                       <div className="font-medium text-gray-900 dark:text-gray-100">{admin.name || 'Tanpa Nama'}</div>
                       <div className="text-gray-500 text-xs">{admin.email}</div>
+                      <div className="text-gray-500 text-xs mt-1">WA: {admin.phone || '-'}</div>
                     </td>
                     <td className="px-6 py-4">
                       <span className="px-2 py-1 bg-semut-red/10 text-semut-red rounded-md text-xs font-bold uppercase tracking-wider">
@@ -75,15 +76,16 @@ export default async function AdminUsersPage() {
                         <span className="px-2 py-1 bg-blue-100 text-blue-700 rounded-md text-xs font-medium">Admin Daerah</span>
                       )}
                     </td>
-                    <td className="px-6 py-4 text-right flex justify-end gap-3 items-center">
-                      {admin.role !== 'SUPERADMIN' && (
-                        <form action={async () => {
-                          "use server";
-                          await deleteAdmin(admin.id);
-                        }}>
-                          <button type="submit" className="text-red-600 hover:text-red-800 font-medium text-xs">Hapus</button>
-                        </form>
-                      )}
+                    <td className="px-6 py-4 text-right flex justify-end gap-3 items-center h-full min-h-[4rem]">
+                      <Link href={`/admin/users/${admin.id}/edit`} className="text-blue-600 hover:text-blue-800 font-medium text-xs">
+                        Edit
+                      </Link>
+                      <form action={async () => {
+                        "use server";
+                        await deleteAdmin(admin.id);
+                      }}>
+                        <button type="submit" className="text-red-600 hover:text-red-800 font-medium text-xs">Hapus</button>
+                      </form>
                     </td>
                   </tr>
                 ))

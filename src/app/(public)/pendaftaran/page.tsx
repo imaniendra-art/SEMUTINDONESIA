@@ -6,18 +6,36 @@ export const metadata: Metadata = {
   description: "Bergabunglah bersama Seniman Musik Dangdut Indonesia.",
 };
 
-export default function PendaftaranPage() {
+import { prisma } from "@/lib/prisma";
+
+export default async function PendaftaranPage() {
+  const settingsRaw = await prisma.setting.findMany();
+  const settings = settingsRaw.reduce((acc, curr) => {
+    acc[curr.key] = curr.value;
+    return acc;
+  }, {} as Record<string, string>);
+
   return (
     <div className="flex flex-col min-h-screen pt-16">
+      {/* Header */}
+      <div className="bg-semut-red text-white py-16 px-4">
+        <div className="container mx-auto text-center">
+          <h1 className="text-4xl font-extrabold mb-4">Pendaftaran Anggota</h1>
+          <p className="text-lg max-w-2xl mx-auto text-semut-red-100">
+            Bergabunglah bersama keluarga besar Seniman Musik Dangdut Indonesia
+          </p>
+        </div>
+      </div>
+
       <div className="container mx-auto px-4 py-16 flex-1 flex flex-col items-center justify-center text-center">
         <div className="w-20 h-20 bg-semut-red/10 text-semut-red rounded-full flex items-center justify-center mb-6">
           <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" x2="19" y1="8" y2="14"/><line x1="22" x2="16" y1="11" y2="11"/></svg>
         </div>
-        <h1 className="text-4xl font-extrabold mb-4">Pendaftaran Anggota</h1>
+        
         <h2 className="text-2xl text-semut-gold font-semibold mb-6">Segera Hadir!</h2>
         
-        <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mb-10">
-          Sistem pendaftaran anggota online SEMUT INDONESIA saat ini sedang dalam tahap pengembangan. Untuk sementara waktu, pendaftaran dan perpanjangan keanggotaan dapat dilakukan dengan menghubungi pengurus pusat.
+        <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mb-10 whitespace-pre-wrap">
+          {settings.anggota_pengantar || "Sistem pendaftaran anggota online SEMUT INDONESIA saat ini sedang dalam tahap pengembangan. Untuk sementara waktu, pendaftaran dan perpanjangan keanggotaan dapat dilakukan dengan menghubungi pengurus pusat."}
         </p>
 
         <div className="bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-8 max-w-lg w-full">
@@ -38,7 +56,7 @@ export default function PendaftaranPage() {
           </ul>
           
           <a 
-            href="https://wa.me/6285399717199" 
+            href={`https://wa.me/${(settings.kontak_telepon || "6285399717199").replace(/\D/g, '')}`} 
             target="_blank" 
             rel="noopener noreferrer"
             className="w-full flex items-center justify-center gap-2 bg-[#25D366] hover:bg-[#128C7E] text-white font-semibold py-3 px-4 rounded-lg transition-colors"

@@ -45,22 +45,22 @@ export default async function BeritaPage() {
             Belum ada berita yang diterbitkan.
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="max-w-4xl mx-auto space-y-8">
             {posts.map((post: any) => {
               const thumbUrl = post.image || getThumbnail(post.content);
               return (
-              <div key={post.id} className="bg-white dark:bg-gray-950 rounded-xl overflow-hidden shadow-sm border border-gray-100 dark:border-gray-800 flex flex-col group hover:shadow-md transition-all">
-                <div className="h-48 bg-gray-200 dark:bg-gray-800 relative">
+              <div key={post.id} className="bg-white dark:bg-gray-950 rounded-xl overflow-hidden shadow-sm border border-gray-100 dark:border-gray-800 flex flex-col md:flex-row group hover:shadow-md transition-all">
+                <div className="md:w-72 md:shrink-0 h-56 md:h-auto bg-gray-200 dark:bg-gray-800 relative">
                   {thumbUrl ? (
                     // eslint-disable-next-line @next/next/no-img-element
-                    <img src={thumbUrl} alt={post.title} className="w-full h-full object-cover" />
+                    <img src={thumbUrl} alt={post.title} className="w-full h-full object-cover absolute inset-0" />
                   ) : (
-                    <div className="w-full h-full bg-gradient-to-br from-semut-red/20 to-semut-gold/20 flex items-center justify-center text-gray-400 font-medium">
+                    <div className="w-full h-full absolute inset-0 bg-gradient-to-br from-semut-red/20 to-semut-gold/20 flex items-center justify-center text-gray-400 font-medium">
                       SEMUT INDONESIA
                     </div>
                   )}
                 </div>
-                <div className="p-6 flex flex-col flex-1">
+                <div className="p-6 md:p-8 flex flex-col flex-1">
                   <div className="flex items-center gap-2 mb-3">
                     <span className="inline-flex px-2 py-0.5 rounded text-[10px] font-bold bg-semut-red text-white uppercase tracking-wider">
                       {post.author?.dpp || 'DPP PUSAT'}
@@ -88,7 +88,8 @@ export default async function BeritaPage() {
                   </div>
                 </div>
               </div>
-            ))}
+              );
+            })}
           </div>
         )}
       </div>

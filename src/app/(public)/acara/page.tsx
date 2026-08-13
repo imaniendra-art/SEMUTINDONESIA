@@ -49,9 +49,12 @@ export default async function AcaraPage() {
                   </div>
                   
                   {/* Event Details */}
-                  <div className="flex-1 text-center md:text-left">
-                    <h2 className="text-2xl font-bold mb-2 group-hover:text-semut-gold transition-colors">{event.title}</h2>
-                    <p className="text-gray-600 dark:text-gray-400 mb-4">{event.description}</p>
+                  <div className="flex-1 min-w-0 text-center md:text-left">
+                    <h2 className="text-2xl font-bold mb-2 group-hover:text-semut-gold transition-colors break-words">{event.title}</h2>
+                    <div 
+                      className="text-gray-600 dark:text-gray-400 mb-6 break-words prose dark:prose-invert max-w-none text-sm md:text-base [&>p]:whitespace-normal [&_p]:mb-2 [&_h1]:mb-2 [&_h2]:mb-2 [&_h3]:mb-2 [&_h4]:mb-2 [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5 [&_li]:mb-1"
+                      dangerouslySetInnerHTML={{ __html: event.description }} 
+                    />
                     
                     <div className="flex flex-col sm:flex-row items-center md:items-start gap-4 text-sm font-medium text-gray-500 dark:text-gray-400">
                       <div className="flex items-center gap-2">

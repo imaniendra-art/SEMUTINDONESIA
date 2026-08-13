@@ -46,6 +46,9 @@ export default async function AdminAcaraPage() {
                     </td>
                     <td className="px-6 py-4 text-gray-500">{event.location}</td>
                     <td className="px-6 py-4 text-right flex justify-end gap-3">
+                      <Link href={`/admin/acara/${event.id}/edit`} className="text-blue-600 hover:text-blue-800">
+                        Edit
+                      </Link>
                       <form action={async () => {
                         "use server";
                         await deleteAcara(event.id);

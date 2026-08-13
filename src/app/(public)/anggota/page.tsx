@@ -1,9 +1,19 @@
 export default function AnggotaPage() {
   return (
-    <div className="container mx-auto px-4 py-16">
-      <div className="max-w-3xl mx-auto text-center">
-        <h1 className="text-4xl font-bold mb-6">Anggota SEMUT INDONESIA</h1>
-        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-800 p-8 md:p-12">
+    <div className="flex flex-col min-h-screen pt-16">
+      {/* Header */}
+      <div className="bg-semut-red text-white py-16 px-4">
+        <div className="container mx-auto text-center">
+          <h1 className="text-4xl font-extrabold mb-4">Anggota SEMUT INDONESIA</h1>
+          <p className="text-lg max-w-2xl mx-auto text-semut-red-100">
+            Direktori resmi seniman dan musisi yang tergabung dalam keluarga besar SEMUT INDONESIA
+          </p>
+        </div>
+      </div>
+
+      <div className="container mx-auto px-4 py-16 flex-1">
+        <div className="max-w-3xl mx-auto text-center">
+          <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-800 p-8 md:p-12">
           <p className="text-xl text-gray-600 dark:text-gray-400 mb-8">
             Halaman direktori anggota sedang dalam tahap pengembangan.
           </p>
@@ -14,6 +24,7 @@ export default function AnggotaPage() {
             Segera hadir: Direktori resmi seniman dan musisi yang tergabung dalam SEMUT INDONESIA.
           </p>
         </div>
+      </div>
       </div>
     </div>
   );

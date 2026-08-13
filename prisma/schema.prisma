@@ -17,6 +17,7 @@ model Admin {
   email     String   @unique
   name      String?
   password  String
+  phone     String?
   role      String   @default("ADMIN")
   dpp       String   @default("DPP PUSAT")
   createdAt DateTime @default(now())
@@ -48,4 +49,17 @@ model Event {
   location    String
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+}
+
+model Setting {
+  key   String @id
+  value String
+}
+
+model Document {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  fileUrl     String
+  createdAt   DateTime @default(now())
 }

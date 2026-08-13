@@ -5,10 +5,17 @@ export const metadata: Metadata = {
   description: "Kontak dan alamat pengurus pusat Seniman Musik Dangdut Indonesia.",
 };
 
-export default function KontakPage() {
+import { prisma } from "@/lib/prisma";
+
+export default async function KontakPage() {
+  const settingsRaw = await prisma.setting.findMany();
+  const settings = settingsRaw.reduce((acc, curr) => {
+    acc[curr.key] = curr.value;
+    return acc;
+  }, {} as Record<string, string>);
+
   return (
     <div className="flex flex-col min-h-screen pt-16">
-      {/* Header */}
       <div className="bg-gray-900 text-white py-16 px-4">
         <div className="container mx-auto text-center">
           <h1 className="text-4xl font-extrabold mb-4">Hubungi Kami</h1>
@@ -32,8 +39,8 @@ export default function KontakPage() {
               <div>
                 <h3 className="font-semibold text-lg">WhatsApp / Telepon</h3>
                 <p className="text-gray-600 dark:text-gray-400 mb-2">Bpk. Muh. Yusuf (Ketua Umum)</p>
-                <a href="https://wa.me/6285399717199" target="_blank" rel="noopener noreferrer" className="text-green-600 dark:text-green-500 font-medium hover:underline">
-                  +62 853-9971-7199
+                <a href={`https://wa.me/${(settings.kontak_telepon || "+62 812-3456-7890").replace(/\D/g, '')}`} target="_blank" rel="noopener noreferrer" className="text-green-600 dark:text-green-500 font-medium hover:underline">
+                  {settings.kontak_telepon || "+62 812-3456-7890"}
                 </a>
               </div>
             </div>
@@ -45,8 +52,8 @@ export default function KontakPage() {
               <div>
                 <h3 className="font-semibold text-lg">Email</h3>
                 <p className="text-gray-600 dark:text-gray-400 mb-2">Untuk kerjasama dan pertanyaan umum</p>
-                <a href="mailto:info@semutindonesia.com" className="text-semut-red font-medium hover:underline">
-                  info@semutindonesia.com
+                <a href={`mailto:${settings.kontak_email || "info@semutindonesia.com"}`} className="text-semut-red font-medium hover:underline">
+                  {settings.kontak_email || "info@semutindonesia.com"}
                 </a>
               </div>
             </div>
@@ -57,10 +64,8 @@ export default function KontakPage() {
               </div>
               <div>
                 <h3 className="font-semibold text-lg">Sekretariat Pusat</h3>
-                <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
-                  Gedung Kesenian Jakarta,<br />
-                  Jl. Kesenian No. 1, Jakarta Pusat,<br />
-                  DKI Jakarta 10710
+                <p className="text-gray-600 dark:text-gray-400 leading-relaxed whitespace-pre-wrap">
+                  {settings.kontak_alamat || "Perumahan Puri Indah, Blok A No. 12\nSidoarjo, Jawa Timur 61211"}
                 </p>
               </div>
             </div>
