@@ -39,6 +39,13 @@ body {
   line-height: 1.8 !important;
   overflow-wrap: break-word;
   word-break: normal;
+  hyphens: none;
+  -webkit-hyphens: none;
+}
+
+.prose {
+  hyphens: none;
+  -webkit-hyphens: none;
 }
 
 .prose img {
