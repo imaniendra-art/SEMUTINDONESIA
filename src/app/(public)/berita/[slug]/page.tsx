@@ -42,20 +42,32 @@ export default async function BeritaDetailPage({ params }: Props) {
 
   return (
     <div className="flex flex-col min-h-screen pt-16">
-      {/* Hero */}
-      <div className="relative bg-black text-white overflow-hidden">
-        {thumbUrl && (
-          <div className="absolute inset-0">
-            <Image src={thumbUrl} alt={post.title} fill className="object-cover opacity-25" />
-            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-black/30" />
+
+      {/* Cover Image */}
+      {thumbUrl && (
+        <div className="w-full bg-gray-100 dark:bg-gray-900">
+          <div className="container mx-auto max-w-3xl">
+            <div className="relative w-full aspect-video overflow-hidden">
+              <Image
+                src={thumbUrl}
+                alt={post.title}
+                fill
+                className="object-cover"
+                priority
+              />
+            </div>
           </div>
-        )}
-        <div className="relative container mx-auto px-6 md:px-8 py-16 md:py-24 max-w-3xl">
-          <div className="flex items-center gap-2 mb-5">
+        </div>
+      )}
+
+      {/* Judul & Meta */}
+      <div className="bg-white dark:bg-gray-950 border-b border-gray-100 dark:border-gray-800">
+        <div className="container mx-auto px-6 md:px-8 py-8 max-w-3xl">
+          <div className="flex items-center gap-2 mb-4">
             <span className="inline-flex px-2 py-0.5 rounded text-[11px] font-bold bg-semut-red text-white uppercase tracking-wider">
               {(post.author as any)?.dpp || "DPP PUSAT"}
             </span>
-            <span className="text-sm text-gray-300">
+            <span className="text-sm text-gray-500">
               {new Date(post.createdAt).toLocaleDateString("id-ID", {
                 day: "numeric",
                 month: "long",
@@ -63,11 +75,11 @@ export default async function BeritaDetailPage({ params }: Props) {
               })}
             </span>
           </div>
-          <h1 className="text-2xl md:text-3xl lg:text-4xl font-extrabold leading-tight mb-4 break-words">
+          <h1 className="text-2xl md:text-3xl lg:text-4xl font-extrabold leading-tight mb-3 break-words text-gray-900 dark:text-gray-50">
             {post.title}
           </h1>
           {(post as any).subtitle && (
-            <p className="text-base md:text-lg text-gray-300 leading-relaxed">
+            <p className="text-base md:text-lg text-gray-500 dark:text-gray-400 leading-relaxed">
               {(post as any).subtitle}
             </p>
           )}
