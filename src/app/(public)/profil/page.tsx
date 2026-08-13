@@ -59,18 +59,18 @@ export default async function ProfilPage() {
                 </span>
                 Sejarah Singkat
               </h2>
-              <div className="prose dark:prose-invert max-w-none text-gray-700 dark:text-gray-300 break-words w-full overflow-hidden">
+              <div className="bg-gray-50 dark:bg-gray-900 rounded-2xl p-8 border border-gray-100 dark:border-gray-800">
                 {settings.profil_sejarah ? (
-                  <div dangerouslySetInnerHTML={{ __html: settings.profil_sejarah }} className="break-words [&>p]:whitespace-normal [&_p]:mb-4 [&_h1]:mb-4 [&_h2]:mb-4 [&_h3]:mb-4 [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5 [&_li]:mb-1 [&_*]:!break-words" />
+                  <div dangerouslySetInnerHTML={{ __html: settings.profil_sejarah }} className="prose dark:prose-invert max-w-none text-gray-700 dark:text-gray-300 w-full overflow-hidden [&>p]:whitespace-normal [&_p]:mb-4 [&_h1]:mb-4 [&_h2]:mb-4 [&_h3]:mb-4 [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5 [&_li]:mb-1 [&_*]:!text-left" />
                 ) : (
-                  <>
+                  <div className="prose dark:prose-invert max-w-none text-gray-700 dark:text-gray-300 w-full overflow-hidden">
                     <p>
                       SEMUT INDONESIA didirikan atas dasar kepedulian terhadap kelestarian dan perkembangan musik dangdut di tanah air. Berawal dari perkumpulan kecil seniman di daerah, kini telah berkembang menjadi organisasi berskala nasional.
                     </p>
                     <p>
                       Tujuan utama kami adalah memberikan perlindungan hak cipta, wadah kreativitas, serta advokasi bagi para musisi, penyanyi, dan pekerja seni dangdut yang sering kali kurang mendapatkan perhatian yang layak.
                     </p>
-                  </>
+                  </div>
                 )}
               </div>
             </section>
@@ -84,9 +84,9 @@ export default async function ProfilPage() {
               </h2>
               <div className="bg-gray-50 dark:bg-gray-900 rounded-2xl p-8 border border-gray-100 dark:border-gray-800">
                 {settings.profil_visi_misi ? (
-                  <div className="prose dark:prose-invert max-w-none break-words w-full overflow-hidden [&>p]:whitespace-normal [&_p]:mb-4 [&_h1]:mb-4 [&_h2]:mb-4 [&_h3]:mb-4 [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5 [&_li]:mb-1 [&_*]:!break-words" dangerouslySetInnerHTML={{ __html: settings.profil_visi_misi }} />
+                  <div className="prose dark:prose-invert max-w-none w-full overflow-hidden [&>p]:whitespace-normal [&_p]:mb-4 [&_h1]:mb-4 [&_h2]:mb-4 [&_h3]:mb-4 [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5 [&_li]:mb-1 [&_*]:!text-left" dangerouslySetInnerHTML={{ __html: settings.profil_visi_misi }} />
                 ) : (
-                  <>
+                  <div className="prose dark:prose-invert max-w-none w-full overflow-hidden">
                     <h3 className="text-xl font-bold mb-4 text-semut-red">Visi</h3>
                     <p className="text-gray-700 dark:text-gray-300 mb-8 italic">
                       "Menjadi organisasi profesional yang menaungi, melindungi, dan menyejahterakan seniman musik dangdut Indonesia serta menjadikan musik dangdut sebagai tuan rumah di negeri sendiri."
@@ -100,7 +100,7 @@ export default async function ProfilPage() {
                       <li>Menyelenggarakan event dan festival berskala nasional maupun internasional.</li>
                       <li>Menjalin kemitraan dengan pemerintah dan pemangku kepentingan industri musik.</li>
                     </ul>
-                  </>
+                  </div>
                 )}
               </div>
             </section>
