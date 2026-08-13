@@ -5,9 +5,14 @@ import { updateAdmin } from "../../actions";
 import Link from "next/link";
 
 export default function EditForm({ admin }: { admin: any }) {
-  const [state, formAction, isPending] = useActionState(
-    async (prevState: any, formData: FormData) => {
-      return await updateAdmin(admin.id, formData);
+  const [state, formAction, isPending] = useActionState<{ error?: string } | null, FormData>(
+    async (_prevState: { error?: string } | null, formData: FormData) => {
+      try {
+        await updateAdmin(admin.id, formData);
+        return null;
+      } catch (e: any) {
+        return { error: e.message };
+      }
     },
     null
   );

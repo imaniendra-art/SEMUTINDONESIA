@@ -3,7 +3,7 @@
 import { useActionState, useState } from "react";
 import { updateDocument } from "../../actions";
 import Link from "next/link";
-import { Document } from "@prisma/client";
+import { Document } from "@/generated/prisma/client";
 
 export default function EditForm({ document }: { document: Document }) {
   const updateDocumentWithId = updateDocument.bind(null, document.id);
