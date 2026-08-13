@@ -1,15 +1,15 @@
 "use client";
 
 import { useActionState, useState, useRef, useMemo } from "react";
-import { createBerita } from "../actions";
+import { updateBerita } from "../../actions";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import "react-quill-new/dist/quill.snow.css";
 
 const ReactQuill = dynamic(() => import("react-quill-new"), { ssr: false });
 
-export default function CreateBeritaPage() {
-  const [content, setContent] = useState("");
+export default function EditBeritaForm({ post }: { post: any }) {
+  const [content, setContent] = useState(post.content || "");
   const quillRef = useRef<any>(null);
   
   const [state, formAction, isPending] = useActionState(
@@ -17,7 +17,7 @@ export default function CreateBeritaPage() {
       if (!content || content === "<p><br></p>") {
         return { error: "Konten berita tidak boleh kosong" };
       }
-      return await createBerita(formData);
+      return await updateBerita(post.id, formData);
     },
     null
   );
@@ -76,7 +76,7 @@ export default function CreateBeritaPage() {
   return (
     <div className="max-w-4xl mx-auto">
       <div className="flex justify-between items-center mb-8">
-        <h1 className="text-2xl font-bold">Tambah Berita</h1>
+        <h1 className="text-2xl font-bold">Edit Berita</h1>
         <Link href="/admin/berita" className="text-gray-500 hover:text-gray-700">
           Kembali
         </Link>
@@ -96,6 +96,7 @@ export default function CreateBeritaPage() {
               id="title"
               name="title"
               type="text" 
+              defaultValue={post.title}
               required
               className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-black focus:ring-2 focus:ring-semut-red outline-none transition-all"
             />
@@ -107,13 +108,19 @@ export default function CreateBeritaPage() {
               id="subtitle"
               name="subtitle"
               type="text" 
+              defaultValue={post.subtitle || ""}
               placeholder="Contoh: Perayaan meriah dengan ribuan penggemar..."
               className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-black focus:ring-2 focus:ring-semut-red outline-none transition-all"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-2" htmlFor="image">Foto Sampul (Cover)</label>
+            <label className="block text-sm font-medium mb-2" htmlFor="image">Foto Sampul (Ganti Opsional)</label>
+            {post.image && (
+              <div className="mb-2 text-sm text-gray-500">
+                Saat ini sudah ada gambar terunggah. Pilih file baru jika ingin menggantinya.
+              </div>
+            )}
             <input 
               id="image"
               name="image"
@@ -143,11 +150,11 @@ export default function CreateBeritaPage() {
               type="checkbox" 
               id="published" 
               name="published" 
-              defaultChecked
+              defaultChecked={post.published}
               className="w-4 h-4 text-semut-red focus:ring-semut-red rounded border-gray-300"
             />
             <label htmlFor="published" className="text-sm font-medium">
-              Langsung Terbitkan (Publish)
+              Terbitkan (Publish)
             </label>
           </div>
 
@@ -157,7 +164,7 @@ export default function CreateBeritaPage() {
               disabled={isPending}
               className="bg-semut-red hover:bg-semut-red-dark text-white font-bold py-2 px-6 rounded-lg transition-colors disabled:opacity-50"
             >
-              {isPending ? "Menyimpan..." : "Simpan Berita"}
+              {isPending ? "Menyimpan..." : "Simpan Perubahan"}
             </button>
           </div>
         </form>

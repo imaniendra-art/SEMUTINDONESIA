@@ -18,6 +18,7 @@ model Admin {
   name      String?
   password  String
   role      String   @default("ADMIN")
+  dpp       String   @default("DPP PUSAT")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   posts     Post[]
@@ -26,6 +27,7 @@ model Admin {
 model Post {
   id        String   @id @default(cuid())
   title     String
+  subtitle  String?
   slug      String   @unique
   content   String
   image     String?

@@ -1,19 +1,80 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState, useRef, useMemo } from "react";
 import { createAcara } from "../actions";
 import Link from "next/link";
+import dynamic from "next/dynamic";
+import "react-quill-new/dist/quill.snow.css";
+
+const ReactQuill = dynamic(() => import("react-quill-new"), { ssr: false });
 
 export default function CreateAcaraPage() {
+  const [description, setDescription] = useState("");
+  const quillRef = useRef<any>(null);
+  
   const [state, formAction, isPending] = useActionState(
     async (prevState: any, formData: FormData) => {
+      if (!description || description === "<p><br></p>") {
+        return { error: "Deskripsi acara tidak boleh kosong" };
+      }
       return await createAcara(formData);
     },
     null
   );
 
+  const imageHandler = () => {
+    const input = document.createElement("input");
+    input.setAttribute("type", "file");
+    input.setAttribute("accept", "image/*");
+    input.click();
+
+    input.onchange = async () => {
+      const file = input.files?.[0];
+      if (file) {
+        const formData = new FormData();
+        formData.append("file", file);
+
+        try {
+          const res = await fetch("/api/upload", {
+            method: "POST",
+            body: formData,
+          });
+          const data = await res.json();
+          
+          if (data.url) {
+            const quill = quillRef.current?.getEditor();
+            const range = quill?.getSelection();
+            if (quill && range) {
+              quill.insertEmbed(range.index, "image", data.url);
+            }
+          } else {
+            alert("Gagal mengunggah gambar");
+          }
+        } catch (e) {
+          console.error("Upload failed", e);
+          alert("Terjadi kesalahan saat mengunggah gambar");
+        }
+      }
+    };
+  };
+
+  const modules = useMemo(() => ({
+    toolbar: {
+      container: [
+        [{ 'header': [1, 2, 3, false] }],
+        ['bold', 'italic', 'underline', 'strike'],
+        [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+        ['link', 'image'],
+        ['clean']
+      ],
+      handlers: {
+        image: imageHandler
+      }
+    }
+  }), []);
+
   return (
-    <div className="max-w-3xl mx-auto">
+    <div className="max-w-4xl mx-auto">
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-2xl font-bold">Tambah Acara</h1>
         <Link href="/admin/acara" className="text-gray-500 hover:text-gray-700">
@@ -41,14 +102,29 @@ export default function CreateAcaraPage() {
           </div>
 
           <div>
+            <label className="block text-sm font-medium mb-2" htmlFor="image">Foto Sampul (Cover)</label>
+            <input 
+              id="image"
+              name="image"
+              type="file" 
+              accept="image/*"
+              className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-black focus:ring-2 focus:ring-semut-gold outline-none transition-all file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-semut-gold file:text-black hover:file:bg-semut-gold-dark"
+            />
+          </div>
+
+          <div>
             <label className="block text-sm font-medium mb-2" htmlFor="description">Deskripsi</label>
-            <textarea 
-              id="description"
-              name="description"
-              rows={4}
-              required
-              className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-black focus:ring-2 focus:ring-semut-gold outline-none transition-all"
-            ></textarea>
+            <input type="hidden" name="description" value={description} />
+            <div className="bg-white dark:text-black rounded-lg overflow-hidden border border-gray-300 dark:border-gray-700 focus-within:ring-2 focus-within:ring-semut-gold transition-all">
+              <ReactQuill 
+                ref={quillRef}
+                theme="snow" 
+                modules={modules}
+                value={description} 
+                onChange={setDescription} 
+                className="h-[300px] mb-12"
+              />
+            </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

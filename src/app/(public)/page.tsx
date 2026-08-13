@@ -1,17 +1,32 @@
 import Image from "next/image";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
+import NewsCarousel from "@/components/NewsCarousel";
+
+function getThumbnail(content: string) {
+  const match = content.match(/<img[^>]+src="([^">]+)"/);
+  return match ? match[1] : null;
+}
+
+function stripHtml(content: string) {
+  return content
+    .replace(/<[^>]*>?/gm, '')
+    .replace(/&nbsp;/g, ' ')
+    .replace(/&amp;/g, '&')
+    .replace(/&quot;/g, '"');
+}
 
 export default async function Home() {
-  // Fetch latest news (top 2 for hero, next 4 for bottom section)
+  // Fetch latest news (top 5 for hero slider, next 4 for bottom section)
   const allLatestPosts = await prisma.post.findMany({
     where: { published: true },
     orderBy: { createdAt: 'desc' },
-    take: 6,
+    take: 9,
+    include: { author: true },
   });
 
-  const heroPosts = allLatestPosts.slice(0, 2);
-  const sectionPosts = allLatestPosts.slice(2, 6);
+  const heroPosts = allLatestPosts.slice(0, 5);
+  const sectionPosts = allLatestPosts.slice(0, 5);
 
   // Fetch upcoming events (top 3)
   const upcomingEvents = await prisma.event.findMany({
@@ -23,7 +38,7 @@ export default async function Home() {
   return (
     <div className="flex flex-col min-h-screen">
       {/* Hero Section - Split Layout */}
-      <section className="relative bg-black text-white pt-12 pb-16 md:pt-20 md:pb-16 px-4 overflow-hidden">
+      <section className="relative bg-black text-white pt-8 pb-16 md:pt-12 md:pb-16 px-4 overflow-hidden">
         {/* Background Effects */}
         <div className="absolute inset-0 opacity-20 bg-[url('/logo-si.jpeg')] bg-cover bg-center bg-no-repeat blur-xl" />
         <div className="absolute inset-0 bg-gradient-to-r from-black via-black/80 to-black/30" />
@@ -31,21 +46,21 @@ export default async function Home() {
         <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-semut-gold/20 rounded-full blur-[120px] translate-y-1/3 translate-x-1/3" />
         <div className="absolute top-1/2 right-1/4 w-[300px] h-[300px] bg-semut-red/20 rounded-full blur-[100px] -translate-y-1/2" />
         
-        <div className="container mx-auto relative z-10 grid lg:grid-cols-12 gap-12 items-center">
+        <div className="container mx-auto relative z-10 grid lg:grid-cols-12 gap-8 lg:gap-12 items-center">
           
           {/* Left Column: Welcome Speech */}
-          <div className="lg:col-span-7 flex flex-col items-center lg:items-start text-center lg:text-left">
+          <div className="lg:col-span-5 flex flex-col items-center lg:items-start text-center lg:text-left">
             <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-white/5 border border-white/10 backdrop-blur-sm mb-8">
               <span className="w-2 h-2 rounded-full bg-semut-red animate-pulse"></span>
               <span className="text-sm font-medium tracking-wide text-gray-300">Selamat Datang di Portal Resmi</span>
             </div>
             
-            <h1 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-extrabold tracking-tight mb-6 leading-tight">
+            <h1 className="text-4xl md:text-5xl lg:text-5xl xl:text-6xl font-extrabold tracking-tight mb-6 leading-tight">
               Seniman Musik <br className="hidden md:block" />
               Dangdut <span className="text-transparent bg-clip-text bg-gradient-to-r from-semut-red to-red-500">Indonesia</span>
             </h1>
             
-            <p className="text-lg md:text-xl text-gray-400 max-w-2xl mb-10 leading-relaxed">
+            <p className="text-lg md:text-xl text-gray-400 max-w-xl mb-10 leading-relaxed">
               Wadah silaturahmi, kreasi, dan pelestarian musik dangdut di tanah air. Bersama memajukan musisi dan seniman lokal ke kancah nasional.
             </p>
             
@@ -66,51 +81,9 @@ export default async function Home() {
             </div>
           </div>
           
-          {/* Right Column: Latest News Glass Card */}
-          <div className="lg:col-span-5 w-full mt-10 lg:mt-0 perspective-1000">
-            <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-6 shadow-2xl relative overflow-hidden group">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-semut-gold/20 to-transparent blur-3xl rounded-full"></div>
-              
-              <div className="flex justify-between items-center mb-6 relative z-10">
-                <h3 className="text-xl font-bold text-white flex items-center gap-3">
-                  <span className="w-1.5 h-6 bg-semut-red rounded-full"></span>
-                  Berita Terhangat
-                </h3>
-                <Link href="/berita" className="text-sm font-medium text-semut-gold hover:text-white transition-colors flex items-center gap-1">
-                  Semua
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6"/></svg>
-                </Link>
-              </div>
-              
-              <div className="space-y-4 relative z-10">
-                {heroPosts.length > 0 ? (
-                  heroPosts.map((post) => (
-                    <Link href={`/berita/${post.id}`} key={post.id} className="block group/item bg-black/40 hover:bg-black/60 p-4 rounded-xl transition-all border border-white/5 hover:border-white/20">
-                      <div className="flex gap-4 items-center">
-                        <div className="w-20 h-20 bg-gray-800 rounded-lg shrink-0 overflow-hidden relative border border-white/10">
-                          {/* We don't have images in schema yet, so fallback */}
-                           <div className="absolute inset-0 bg-gradient-to-br from-semut-red/40 to-semut-gold/40 flex items-center justify-center">
-                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-white/50"><path d="M2 12h20"/><path d="M20 12v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-8"/><path d="m4 8 16-4"/><path d="m8.86 6.78-.45-1.81a2 2 0 0 0-2.41-1.46L4.03 4.04"/></svg>
-                           </div>
-                        </div>
-                        <div className="flex flex-col justify-center flex-1">
-                          <span className="text-xs text-semut-gold mb-1.5 font-medium tracking-wide">
-                            {post.createdAt.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}
-                          </span>
-                          <h4 className="text-sm md:text-base font-semibold text-gray-200 group-hover/item:text-white transition-colors line-clamp-2 leading-snug">
-                            {post.title}
-                          </h4>
-                        </div>
-                      </div>
-                    </Link>
-                  ))
-                ) : (
-                  <div className="text-center p-6 text-gray-400 bg-black/20 rounded-xl border border-white/5">
-                    Belum ada berita dipublikasikan.
-                  </div>
-                )}
-              </div>
-            </div>
+          {/* Right Column: Dynamic News Carousel */}
+          <div className="lg:col-span-7 w-full mt-10 lg:mt-0 perspective-1000 z-20">
+            <NewsCarousel posts={heroPosts as any} />
           </div>
           
         </div>
@@ -154,35 +127,88 @@ export default async function Home() {
                 </Link>
               </div>
               
-              <div className="grid sm:grid-cols-2 gap-6">
-                {sectionPosts.length > 0 ? sectionPosts.map((post) => (
-                  <Link href={`/berita/${post.id}`} key={post.id} className="bg-white dark:bg-gray-950 rounded-2xl overflow-hidden border border-gray-100 dark:border-gray-800 shadow-sm group hover:shadow-md transition-all flex flex-col">
-                    <div className="w-full h-48 bg-gray-200 dark:bg-gray-800 relative overflow-hidden">
-                       <div className="absolute inset-0 bg-gradient-to-br from-semut-red/20 to-semut-gold/20 flex items-center justify-center transition-transform group-hover:scale-105">
-                         <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gray-400"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
-                       </div>
-                    </div>
-                    <div className="p-6 flex flex-col flex-1">
-                      <span className="text-xs font-semibold text-semut-red mb-3">
-                        {post.createdAt.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}
-                      </span>
-                      <h4 className="text-xl font-bold mb-3 group-hover:text-semut-red transition-colors line-clamp-2">
-                        {post.title}
-                      </h4>
-                      <p className="text-gray-600 dark:text-gray-400 text-sm line-clamp-3 mb-4 flex-1">
-                        {post.content}
-                      </p>
-                      <div className="text-sm font-medium text-semut-red flex items-center gap-1 mt-auto">
-                        Baca selengkapnya <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="transition-transform group-hover:translate-x-1"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+              {/* 3 Berita Pertama: Memanjang (Gambar Kiri, Teks Kanan) */}
+              <div className="flex flex-col gap-6 mb-6">
+                {sectionPosts.slice(0, 3).map((post: any) => {
+                  const thumbUrl = post.image || getThumbnail(post.content);
+                  return (
+                    <Link href={`/berita/${post.id}`} key={post.id} className="bg-white dark:bg-gray-950 rounded-2xl overflow-hidden border border-gray-100 dark:border-gray-800 shadow-sm group hover:shadow-md transition-all flex flex-col sm:flex-row">
+                      <div className="w-full sm:w-2/5 md:w-1/3 h-56 sm:h-auto min-h-[200px] bg-gray-200 dark:bg-gray-800 relative overflow-hidden shrink-0">
+                         {thumbUrl ? (
+                           <Image src={thumbUrl} alt={post.title} fill className="object-cover transition-transform group-hover:scale-105" />
+                         ) : (
+                           <div className="absolute inset-0 bg-gradient-to-br from-semut-red/20 to-semut-gold/20 flex items-center justify-center transition-transform group-hover:scale-105">
+                             <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-semut-red/50"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
+                           </div>
+                         )}
                       </div>
-                    </div>
-                  </Link>
-                )) : (
-                  <div className="col-span-2 text-center p-12 bg-white dark:bg-gray-950 rounded-2xl border border-dashed border-gray-300 dark:border-gray-700 text-gray-500">
-                    Kumpulan berita akan segera hadir.
-                  </div>
-                )}
+                      <div className="p-6 flex flex-col flex-1 justify-center min-w-0 relative">
+                        <div className="flex items-center gap-2 mb-3">
+                          <span className="inline-flex px-2 py-0.5 rounded text-[10px] font-bold bg-semut-red text-white uppercase tracking-wider">
+                            {post.author?.dpp || 'DPP PUSAT'}
+                          </span>
+                          <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                            {post.createdAt.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}
+                          </span>
+                        </div>
+                        <h4 className="text-xl md:text-2xl font-bold mb-3 group-hover:text-semut-red transition-colors line-clamp-2 leading-tight">
+                          {post.title}
+                        </h4>
+                        <p className="text-gray-600 dark:text-gray-400 text-sm md:text-base line-clamp-3 mb-4 break-words">
+                          {stripHtml(post.content)}
+                        </p>
+                        <div className="text-sm font-bold text-semut-red flex items-center gap-1 mt-auto">
+                          Baca selengkapnya <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="transition-transform group-hover:translate-x-1"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                        </div>
+                      </div>
+                    </Link>
+                  );
+                })}
               </div>
+
+              {/* Berita Berikutnya: Kotak Menyamping */}
+              {sectionPosts.length > 3 && (
+                <div className="grid sm:grid-cols-2 gap-6">
+                  {sectionPosts.slice(3, 5).map((post: any) => {
+                    const thumbUrl = post.image || getThumbnail(post.content);
+                    return (
+                      <Link href={`/berita/${post.id}`} key={post.id} className="bg-white dark:bg-gray-950 rounded-2xl overflow-hidden border border-gray-100 dark:border-gray-800 shadow-sm group hover:shadow-md transition-all flex flex-col">
+                        <div className="w-full h-48 bg-gray-200 dark:bg-gray-800 relative overflow-hidden shrink-0">
+                           {thumbUrl ? (
+                             <Image src={thumbUrl} alt={post.title} fill className="object-cover transition-transform group-hover:scale-105" />
+                           ) : (
+                             <div className="absolute inset-0 bg-gradient-to-br from-semut-red/20 to-semut-gold/20 flex items-center justify-center transition-transform group-hover:scale-105">
+                               <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-semut-red/50"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
+                             </div>
+                           )}
+                        </div>
+                        <div className="p-6 flex flex-col flex-1 min-w-0">
+                          <div className="flex items-center gap-2 mb-3">
+                            <span className="inline-flex px-2 py-0.5 rounded text-[10px] font-bold bg-semut-red text-white uppercase tracking-wider">
+                              {post.author?.dpp || 'DPP PUSAT'}
+                            </span>
+                          </div>
+                          <h4 className="text-lg font-bold mb-3 group-hover:text-semut-red transition-colors line-clamp-2 leading-tight">
+                            {post.title}
+                          </h4>
+                          <p className="text-gray-600 dark:text-gray-400 text-sm line-clamp-3 mb-4 flex-1 break-words">
+                            {stripHtml(post.content)}
+                          </p>
+                          <div className="text-sm font-bold text-semut-red flex items-center gap-1 mt-auto">
+                            Baca selengkapnya <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="transition-transform group-hover:translate-x-1"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                          </div>
+                        </div>
+                      </Link>
+                    );
+                  })}
+                </div>
+              )}
+              
+              {sectionPosts.length === 0 && (
+                <div className="text-center p-12 bg-white dark:bg-gray-950 rounded-2xl border border-dashed border-gray-300 dark:border-gray-700 text-gray-500">
+                  Kumpulan berita akan segera hadir.
+                </div>
+              )}
               <Link href="/berita" className="sm:hidden mt-6 flex justify-center w-full py-3 rounded-xl border border-gray-200 dark:border-gray-800 text-sm font-medium text-foreground hover:bg-gray-100 dark:hover:bg-gray-900 transition-colors">
                 Lihat Semua Berita
               </Link>

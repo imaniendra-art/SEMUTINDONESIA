@@ -33,6 +33,6 @@ export async function loginAction(formData: FormData) {
     return { error: "Kredensial tidak valid." };
   }
 
-  await setSession(admin.id);
+  await setSession(admin.id, admin.role, admin.dpp);
   redirect("/admin");
 }
