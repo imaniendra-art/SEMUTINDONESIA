@@ -1,7 +1,7 @@
 "use client";
 
 import { useActionState, useState } from "react";
-import { updateDocument } from "../actions";
+import { updateDocument } from "../../actions";
 import Link from "next/link";
 import { Document } from "@prisma/client";
 
