@@ -61,7 +61,7 @@ export default async function ProfilPage() {
               </h2>
               <div className="bg-gray-50 dark:bg-gray-900 rounded-2xl p-8 border border-gray-100 dark:border-gray-800">
                 {settings.profil_sejarah ? (
-                  <div dangerouslySetInnerHTML={{ __html: settings.profil_sejarah.replace(/&nbsp;/g, ' ') }} className="prose dark:prose-invert max-w-none text-gray-700 dark:text-gray-300 w-full overflow-hidden [&_p]:!m-0 [&_p]:!leading-normal [&_h1]:!mb-2 [&_h2]:!mb-2 [&_h3]:!mb-2 [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5 [&_li]:!mb-1 [&_*]:!text-left [&_*]:!break-normal" />
+                  <div dangerouslySetInnerHTML={{ __html: settings.profil_sejarah.replace(/&nbsp;/g, ' ') }} className="prose dark:prose-invert max-w-none text-gray-700 dark:text-gray-300 w-full overflow-hidden [&_p]:!m-0 [&_p:empty]:h-6 [&_p]:!leading-normal [&_h1]:!mb-2 [&_h2]:!mb-2 [&_h3]:!mb-2 [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5 [&_li]:!mb-1 [&_*]:!text-left [&_*]:!break-normal" />
                 ) : (
                   <div className="prose dark:prose-invert max-w-none text-gray-700 dark:text-gray-300 w-full overflow-hidden">
                     <p>
@@ -84,7 +84,7 @@ export default async function ProfilPage() {
               </h2>
               <div className="bg-gray-50 dark:bg-gray-900 rounded-2xl p-8 border border-gray-100 dark:border-gray-800">
                 {settings.profil_visi_misi ? (
-                  <div className="prose dark:prose-invert max-w-none w-full overflow-hidden [&_p]:!m-0 [&_p]:!leading-normal [&_h1]:!mb-2 [&_h2]:!mb-2 [&_h3]:!mb-2 [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5 [&_li]:!mb-1 [&_*]:!text-left [&_*]:!break-normal" dangerouslySetInnerHTML={{ __html: settings.profil_visi_misi.replace(/&nbsp;/g, ' ') }} />
+                  <div className="prose dark:prose-invert max-w-none w-full overflow-hidden [&_p]:!m-0 [&_p:empty]:h-6 [&_p]:!leading-normal [&_h1]:!mb-2 [&_h2]:!mb-2 [&_h3]:!mb-2 [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5 [&_li]:!mb-1 [&_*]:!text-left [&_*]:!break-normal" dangerouslySetInnerHTML={{ __html: settings.profil_visi_misi.replace(/&nbsp;/g, ' ') }} />
                 ) : (
                   <div className="prose dark:prose-invert max-w-none w-full overflow-hidden">
                     <h3 className="text-xl font-bold mb-4 text-semut-red">Visi</h3>
