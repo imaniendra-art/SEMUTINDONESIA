@@ -1,8 +1,8 @@
 import { deleteSession } from "@/lib/session";
-import { redirect } from "next/navigation";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
-export async function POST() {
+export async function POST(request: NextRequest) {
   await deleteSession();
-  return NextResponse.redirect(new URL("/admin/login", process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"));
+  const loginUrl = new URL("/admin/login", request.nextUrl.origin);
+  return NextResponse.redirect(loginUrl);
 }

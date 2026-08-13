@@ -52,6 +52,7 @@ export async function createBerita(formData: FormData) {
 
   revalidatePath("/admin/berita");
   revalidatePath("/berita");
+  revalidatePath("/");
   redirect("/admin/berita");
 }
 
@@ -62,6 +63,7 @@ export async function deleteBerita(id: string) {
   await prisma.post.delete({ where: { id } });
   revalidatePath("/admin/berita");
   revalidatePath("/berita");
+  revalidatePath("/");
 }
 
 export async function updateBerita(id: string, formData: FormData) {
@@ -110,5 +112,6 @@ export async function updateBerita(id: string, formData: FormData) {
 
   revalidatePath("/admin/berita");
   revalidatePath("/berita");
+  revalidatePath("/");
   redirect("/admin/berita");
 }
