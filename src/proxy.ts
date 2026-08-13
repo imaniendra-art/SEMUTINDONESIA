@@ -7,17 +7,23 @@ export async function proxy(request: NextRequest) {
   const res = await updateSession(request);
 
   // Protect /admin routes (except login)
-  if (request.nextUrl.pathname.startsWith('/admin') && request.nextUrl.pathname !== '/admin/login') {
+  if (
+    request.nextUrl.pathname.startsWith('/admin') &&
+    !request.nextUrl.pathname.startsWith('/admin/login')
+  ) {
     const sessionCookie = request.cookies.get('session')?.value;
-    
+
     if (!sessionCookie) {
       return NextResponse.redirect(new URL('/admin/login', request.url));
     }
-    
+
     try {
       await decrypt(sessionCookie);
-    } catch (e) {
-      return NextResponse.redirect(new URL('/admin/login', request.url));
+    } catch {
+      // Invalid or expired token — clear cookie and redirect
+      const response = NextResponse.redirect(new URL('/admin/login', request.url));
+      response.cookies.delete('session');
+      return response;
     }
   }
 

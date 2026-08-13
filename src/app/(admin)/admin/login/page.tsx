@@ -41,7 +41,7 @@ export default function LoginPage() {
               name="email"
               type="email" 
               required
-              defaultValue="admin@semutindonesia.com"
+              placeholder="Email admin"
               className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-black focus:ring-2 focus:ring-semut-red outline-none transition-all"
             />
           </div>
@@ -53,7 +53,7 @@ export default function LoginPage() {
               name="password"
               type="password" 
               required
-              defaultValue="admin123"
+              placeholder="Password"
               className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-black focus:ring-2 focus:ring-semut-red outline-none transition-all"
             />
           </div>

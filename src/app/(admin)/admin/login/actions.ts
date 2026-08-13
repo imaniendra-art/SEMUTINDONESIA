@@ -3,6 +3,7 @@
 import { prisma } from "@/lib/prisma";
 import { setSession } from "@/lib/session";
 import { redirect } from "next/navigation";
+import bcrypt from "bcryptjs";
 
 export async function loginAction(formData: FormData) {
   const email = formData.get("email") as string;
@@ -12,25 +13,42 @@ export async function loginAction(formData: FormData) {
     return { error: "Email dan password harus diisi." };
   }
 
-  // In a real app, hash password and compare. Here we do simple compare for MVP.
-  // Assuming a default admin was created or will be created.
-  // If no admin exists, let's create a backdoor for the first login for MVP (demo only).
   let admin = await prisma.admin.findUnique({ where: { email } });
 
+  // Auto-create default superadmin on very first login if no admin exists at all
   if (!admin && email === "admin@semutindonesia.com" && password === "admin123") {
-    // Auto-create default admin on first login attempt if it matches default credentials
+    const hashed = await bcrypt.hash(password, 12);
     admin = await prisma.admin.create({
       data: {
         email,
-        password, // Should be hashed!
+        password: hashed,
         name: "Admin Pusat",
-        role: "SUPERADMIN"
-      }
+        role: "SUPERADMIN",
+      },
     });
   }
 
-  if (!admin || admin.password !== password) {
+  if (!admin) {
     return { error: "Kredensial tidak valid." };
+  }
+
+  // Compare with bcrypt — handles both hashed and legacy plaintext (migration path)
+  const isValid = await bcrypt.compare(password, admin.password).catch(() => false);
+
+  // Fallback for legacy plaintext passwords (before migration)
+  const isLegacyMatch = !isValid && admin.password === password;
+
+  if (!isValid && !isLegacyMatch) {
+    return { error: "Kredensial tidak valid." };
+  }
+
+  // If legacy plaintext matched, silently upgrade to hashed
+  if (isLegacyMatch) {
+    const hashed = await bcrypt.hash(password, 12);
+    await prisma.admin.update({
+      where: { id: admin.id },
+      data: { password: hashed },
+    });
   }
 
   await setSession(admin.id, admin.role, admin.dpp);
