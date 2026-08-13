@@ -50,6 +50,7 @@ export async function createAcara(formData: FormData) {
 
   revalidatePath("/admin/acara");
   revalidatePath("/acara");
+  revalidatePath("/");
   redirect("/admin/acara");
 }
 
@@ -60,6 +61,7 @@ export async function deleteAcara(id: string) {
   await prisma.event.delete({ where: { id } });
   revalidatePath("/admin/acara");
   revalidatePath("/acara");
+  revalidatePath("/");
 }
 
 export async function updateAcara(id: string, formData: FormData) {
@@ -102,5 +104,6 @@ export async function updateAcara(id: string, formData: FormData) {
 
   revalidatePath("/admin/acara");
   revalidatePath("/acara");
+  revalidatePath("/");
   redirect("/admin/acara");
 }
