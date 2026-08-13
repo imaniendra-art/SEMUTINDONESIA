@@ -243,14 +243,17 @@ export default async function Home() {
             <div className="lg:col-span-1 space-y-8">
               
               {/* Logo Organisasi */}
-              <div className="flex flex-col items-center justify-center p-6 bg-white dark:bg-gray-950 rounded-3xl border border-gray-100 dark:border-gray-800 shadow-sm">
-                <Image 
-                  src={settings.logo_url || "/logo-si.jpeg"} 
-                  alt="Logo Organisasi" 
-                  width={200} 
-                  height={200} 
-                  className="object-contain"
-                />
+              <div className="bg-white dark:bg-gray-950 rounded-3xl p-4 border border-gray-100 dark:border-gray-800 shadow-sm overflow-hidden">
+                <h3 className="text-sm font-bold mb-3 uppercase tracking-wider text-gray-500">Logo Resmi</h3>
+                <div className="flex flex-col items-center justify-center py-2">
+                  <Image 
+                    src={settings.logo_url || "/logo-si.jpeg"} 
+                    alt="Logo Organisasi" 
+                    width={200} 
+                    height={200} 
+                    className="object-contain"
+                  />
+                </div>
               </div>
 
               {/* YouTube Video Embed */}
