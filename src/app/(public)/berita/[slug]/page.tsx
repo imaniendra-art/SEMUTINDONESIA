@@ -81,14 +81,14 @@ export default async function BeritaDetailPage({ params }: Props) {
             className="
               prose prose-base md:prose-lg dark:prose-invert max-w-none
               prose-headings:font-bold prose-headings:text-gray-900 dark:prose-headings:text-gray-100
-              prose-p:text-gray-700 dark:prose-p:text-gray-300 prose-p:leading-relaxed prose-p:break-words
+              prose-p:text-gray-700 dark:prose-p:text-gray-300 prose-p:leading-relaxed prose-p:mb-5
               prose-a:text-semut-red prose-a:no-underline hover:prose-a:underline
               prose-strong:text-gray-900 dark:prose-strong:text-gray-100
-              prose-img:rounded-xl prose-img:shadow-md prose-img:mx-auto prose-img:max-w-full
+              prose-img:rounded-xl prose-img:shadow-md prose-img:mx-auto prose-img:max-w-full prose-img:my-6
               prose-blockquote:border-l-4 prose-blockquote:border-semut-red prose-blockquote:pl-4 prose-blockquote:italic prose-blockquote:text-gray-500
               prose-ul:pl-6 prose-ol:pl-6 prose-li:mb-1
-              [&_*]:max-w-full [&_*]:break-words [&_*]:word-break-break-word
-              [&_table]:w-full [&_table]:overflow-x-auto [&_table]:block
+              [&_p]:mb-5 [&_p]:leading-relaxed [&_p]:overflow-wrap-anywhere
+              [&_*]:max-w-full [&_img]:max-w-full
             "
             dangerouslySetInnerHTML={{ __html: post.content }}
           />
