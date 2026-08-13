@@ -35,8 +35,8 @@ body {
 
 /* Article prose content fix */
 .prose p {
-  margin-bottom: 1.25rem !important;
-  line-height: 1.8 !important;
+  margin-bottom: 1.25rem;
+  line-height: 1.8;
   overflow-wrap: break-word;
   word-break: normal;
   hyphens: none;
