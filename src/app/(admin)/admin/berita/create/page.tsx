@@ -1,0 +1,80 @@
+"use client";
+
+import { useActionState } from "react";
+import { createBerita } from "../actions";
+import Link from "next/link";
+
+export default function CreateBeritaPage() {
+  const [state, formAction, isPending] = useActionState(
+    async (prevState: any, formData: FormData) => {
+      return await createBerita(formData);
+    },
+    null
+  );
+
+  return (
+    <div className="max-w-3xl mx-auto">
+      <div className="flex justify-between items-center mb-8">
+        <h1 className="text-2xl font-bold">Tambah Berita</h1>
+        <Link href="/admin/berita" className="text-gray-500 hover:text-gray-700">
+          Kembali
+        </Link>
+      </div>
+
+      <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-800 p-6 md:p-8">
+        <form action={formAction} className="space-y-6">
+          {state?.error && (
+            <div className="p-3 bg-red-100 border border-red-200 text-red-700 rounded-md text-sm">
+              {state.error}
+            </div>
+          )}
+
+          <div>
+            <label className="block text-sm font-medium mb-2" htmlFor="title">Judul Berita</label>
+            <input 
+              id="title"
+              name="title"
+              type="text" 
+              required
+              className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-black focus:ring-2 focus:ring-semut-red outline-none transition-all"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium mb-2" htmlFor="content">Isi Konten</label>
+            <textarea 
+              id="content"
+              name="content"
+              rows={8}
+              required
+              className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-black focus:ring-2 focus:ring-semut-red outline-none transition-all"
+            ></textarea>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <input 
+              type="checkbox" 
+              id="published" 
+              name="published" 
+              defaultChecked
+              className="w-4 h-4 text-semut-red focus:ring-semut-red rounded border-gray-300"
+            />
+            <label htmlFor="published" className="text-sm font-medium">
+              Langsung Terbitkan (Publish)
+            </label>
+          </div>
+
+          <div className="pt-4 border-t border-gray-200 dark:border-gray-800 flex justify-end">
+            <button 
+              type="submit" 
+              disabled={isPending}
+              className="bg-semut-red hover:bg-semut-red-dark text-white font-bold py-2 px-6 rounded-lg transition-colors disabled:opacity-50"
+            >
+              {isPending ? "Menyimpan..." : "Simpan Berita"}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+}
