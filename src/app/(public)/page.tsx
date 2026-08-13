@@ -54,6 +54,7 @@ export default async function Home() {
   const galleryItems = allLatestPosts
     .map(post => ({
       id: post.id,
+      slug: post.slug,
       title: post.title,
       image: post.image || getThumbnail(post.content)
     }))
@@ -157,7 +158,7 @@ export default async function Home() {
                 {sectionPosts.slice(0, 3).map((post: any) => {
                   const thumbUrl = post.image || getThumbnail(post.content);
                   return (
-                    <Link href={`/berita/${post.id}`} key={post.id} className="bg-white dark:bg-gray-950 rounded-2xl overflow-hidden border border-gray-100 dark:border-gray-800 shadow-sm group hover:shadow-md transition-all flex flex-col sm:flex-row">
+                    <Link href={`/berita/${post.slug}`} key={post.id} className="bg-white dark:bg-gray-950 rounded-2xl overflow-hidden border border-gray-100 dark:border-gray-800 shadow-sm group hover:shadow-md transition-all flex flex-col sm:flex-row">
                       <div className="w-full sm:w-2/5 md:w-1/3 h-56 sm:h-auto min-h-[200px] bg-gray-200 dark:bg-gray-800 relative overflow-hidden shrink-0">
                          {thumbUrl ? (
                            <Image src={thumbUrl} alt={post.title} fill className="object-cover transition-transform group-hover:scale-105" />
@@ -197,7 +198,7 @@ export default async function Home() {
                   {sectionPosts.slice(3, 5).map((post: any) => {
                     const thumbUrl = post.image || getThumbnail(post.content);
                     return (
-                      <Link href={`/berita/${post.id}`} key={post.id} className="bg-white dark:bg-gray-950 rounded-2xl overflow-hidden border border-gray-100 dark:border-gray-800 shadow-sm group hover:shadow-md transition-all flex flex-col">
+                      <Link href={`/berita/${post.slug}`} key={post.id} className="bg-white dark:bg-gray-950 rounded-2xl overflow-hidden border border-gray-100 dark:border-gray-800 shadow-sm group hover:shadow-md transition-all flex flex-col">
                         <div className="w-full h-48 bg-gray-200 dark:bg-gray-800 relative overflow-hidden shrink-0">
                            {thumbUrl ? (
                              <Image src={thumbUrl} alt={post.title} fill className="object-cover transition-transform group-hover:scale-105" />
@@ -283,7 +284,7 @@ export default async function Home() {
                   </h3>
                   <div className="grid grid-cols-4 gap-0.5 rounded-xl overflow-hidden border border-gray-100 dark:border-gray-800">
                     {galleryItems.map((item) => (
-                      <Link href={`/berita/${item.id}`} key={item.id} className="group relative aspect-square bg-gray-100 dark:bg-gray-900 overflow-hidden">
+                      <Link href={`/berita/${item.slug}`} key={item.id} className="group relative aspect-square bg-gray-100 dark:bg-gray-900 overflow-hidden">
                         <Image 
                           src={item.image!} 
                           alt={item.title} 
